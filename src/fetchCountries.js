@@ -7,15 +7,22 @@ const fetchCountries = async name => {
     const response = await fetch(
         COUNTRIES_API_URL +
           name +
-          '?fields=name,capital,populatoin,flags,langualges'
+          '?fields=name,capital,population,flags,languages'
     );
 
-    if (response.status == 200) {
-      let json = await response.json();
-      return json;
+    if (!response.ok) {
+      // Rzucamy błąd, jeśli odpowiedź nie jest poprawna
+      throw new Error(response.status);
     }
+
+    let json = await response.json();
+    return json;
+    
   } catch (error) {
-    throw new Error(response.status);
+    // Obsługa błędu - wyświetlenie komunikatu Notiflix
+    Notiflix.Notify.failure("Oops, there is no country with that name");
+    // Rzucenie błędu dalej, jeśli konieczne
+    throw error;
   }
 };
 
